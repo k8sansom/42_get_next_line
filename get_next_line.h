@@ -6,7 +6,7 @@
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 14:03:28 by ksansom           #+#    #+#             */
-/*   Updated: 2023/05/31 11:12:54 by ksansom          ###   ########.fr       */
+/*   Updated: 2023/05/31 14:17:37 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,7 @@
 # define READLINE_OK 1
 # define ENDFILE 0
 # define ERROR -1
+
+
 
 #endif
