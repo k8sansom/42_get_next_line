@@ -3,12 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksansom <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 14:02:14 by ksansom           #+#    #+#             */
-/*   Updated: 2023/05/24 14:02:21 by ksansom          ###   ########.fr       */
+/*   Updated: 2023/05/31 10:16:03 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
 char *get_next_line(int fd)
 {
+	
+}
