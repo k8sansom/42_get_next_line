@@ -69,21 +69,21 @@ char	*ft_line(char *str)
 char	*ft_read_chunks(int fd, char *str)
 {
 	char	*buffer_read;
-	int		byte_read;
+	int		bytes_read;
 
 	if (!str)
 		str = ft_calloc(1, 1);
 	buffer_read = ft_calloc(BUFFER_SIZE + 1, 1);
-	byte_read = 1;
-	while (byte_read > 0)
+	bytes_read = 1;
+	while (bytes_read > 0)
 	{
-		byte_read = read(fd, buffer_read, BUFFER_SIZE);
-		if (byte_read == -1)
+		bytes_read = read(fd, buffer_read, BUFFER_SIZE);
+		if (bytes_read == -1)
 		{
 			free(buffer_read);
 			return (0);
 		}
-		buffer_read[byte_read] = '\0';
+		buffer_read[bytes_read] = '\0';
 		str = ft_join_clean(str, buffer_read);
 		if (ft_strchr(buffer_read, '\n'))
 			break ;
