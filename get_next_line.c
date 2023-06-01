@@ -6,7 +6,7 @@
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 14:02:14 by ksansom           #+#    #+#             */
-/*   Updated: 2023/06/01 14:24:54 by ksansom          ###   ########.fr       */
+/*   Updated: 2023/06/01 14:44:09 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_next(char *buffer)
 {
 	int		i;
 	int		j;
-	char	*line;
+	char	*update;
 
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
@@ -33,15 +33,15 @@ char	*ft_next(char *buffer)
 	if (!buffer[i])
 	{
 		free(buffer);
-		return (NULL);
+		return (0);
 	}
-	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	update = ft_calloc((ft_strlen(buffer) - i + 1), 1);
 	i++;
 	j = 0;
 	while (buffer[i])
-		line[j++] = buffer[i++];
+		update[j++] = buffer[i++];
 	free(buffer);
-	return (line);
+	return (update);
 }
 
 char	*ft_line(char *buffer)
@@ -54,7 +54,7 @@ char	*ft_line(char *buffer)
 		return (0);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	line = ft_calloc(i + 2, sizeof(char));
+	line = ft_calloc(i + 2, 1);
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 	{
@@ -73,7 +73,7 @@ char	*ft_read_chunks(int fd, char *res)
 
 	if (!res)
 		res = ft_calloc(1, 1);
-	b_size_read = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	b_size_read = ft_calloc(BUFFER_SIZE + 1, 1);
 	byte_read = 1;
 	while (byte_read > 0)
 	{
