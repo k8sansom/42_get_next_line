@@ -12,97 +12,97 @@
 
 #include "get_next_line.h"
 
-char	*ft_join_clean(char *temp, char *buf)
+char	*ft_join_clean(char *str, char *buffer_read)
 {
 	char	*join;
 
-	join = ft_strjoin(temp, buf);
-	free(temp);
+	join = ft_strjoin(str, buffer_read);
+	free(str);
 	return (join);
 }
 
-char	*ft_next(char *buffer)
+char	*ft_next(char *str)
 {
 	int		i;
 	int		j;
-	char	*update;
+	char	*leftover;
 
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (str[i] && str[i] != '\n')
 		i++;
-	if (!buffer[i])
+	if (!str[i])
 	{
-		free(buffer);
+		free(str);
 		return (0);
 	}
-	update = ft_calloc((ft_strlen(buffer) - i + 1), 1);
+	leftover = ft_calloc((ft_strlen(str) - i + 1), 1);
 	i++;
 	j = 0;
-	while (buffer[i])
-		update[j++] = buffer[i++];
-	free(buffer);
-	return (update);
+	while (str[i])
+		leftover[j++] = str[i++];
+	free(str);
+	return (leftover);
 }
 
-char	*ft_line(char *buffer)
+char	*ft_line(char *str)
 {
 	char	*line;
 	int		i;
 
 	i = 0;
-	if (!buffer[i])
+	if (!str[i])
 		return (0);
-	while (buffer[i] && buffer[i] != '\n')
+	while (str[i] && str[i] != '\n')
 		i++;
 	line = ft_calloc(i + 2, 1);
 	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
+	while (str[i] && str[i] != '\n')
 	{
-		line[i] = buffer[i];
+		line[i] = str[i];
 		i++;
 	}
-	if (buffer[i] && buffer[i] == '\n')
+	if (str[i] && str[i] == '\n')
 		line[i++] = '\n';
 	return (line);
 }
 
-char	*ft_read_chunks(int fd, char *res)
+char	*ft_read_chunks(int fd, char *str)
 {
-	char	*b_size_read;
+	char	*buffer_read;
 	int		byte_read;
 
-	if (!res)
-		res = ft_calloc(1, 1);
-	b_size_read = ft_calloc(BUFFER_SIZE + 1, 1);
+	if (!str)
+		str = ft_calloc(1, 1);
+	buffer_read = ft_calloc(BUFFER_SIZE + 1, 1);
 	byte_read = 1;
 	while (byte_read > 0)
 	{
-		byte_read = read(fd, b_size_read, BUFFER_SIZE);
+		byte_read = read(fd, buffer_read, BUFFER_SIZE);
 		if (byte_read == -1)
 		{
-			free(b_size_read);
+			free(buffer_read);
 			return (0);
 		}
-		b_size_read[byte_read] = '\0';
-		res = ft_join_clean(res, b_size_read);
-		if (ft_strchr(b_size_read, '\n'))
+		buffer_read[byte_read] = '\0';
+		str = ft_join_clean(str, buffer_read);
+		if (ft_strchr(buffer_read, '\n'))
 			break ;
 	}
-	free(b_size_read);
-	return (res);
+	free(buffer_read);
+	return (str);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*string;
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (0);
-	buffer = ft_read_chunks(fd, buffer);
-	if (!buffer)
+	string = ft_read_chunks(fd, string);
+	if (!string)
 		return (0);
-	line = ft_line(buffer);
-	buffer = ft_next(buffer);
+	line = ft_line(string);
+	string = ft_next(string);
 	return (line);
 }
