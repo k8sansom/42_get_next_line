@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/24 14:02:14 by ksansom           #+#    #+#             */
-/*   Updated: 2023/06/01 14:24:54 by ksansom          ###   ########.fr       */
+/*   Created: 2023/06/01 10:16:21 by ksansom           #+#    #+#             */
+/*   Updated: 2023/06/01 10:31:30 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-char	*ft_join_clean(char *temp, char *buf)
+char	*fr_free(char *buffer, char *buf)
 {
-	char	*join;
+	char	*temp;
 
-	join = ft_strjoin(temp, buf);
-	free(temp);
-	return (join);
+	temp = ft_strjoin(buffer, buf);
+	free(buffer);
+	return (temp);
 }
 
 char	*ft_next(char *buffer)
@@ -51,7 +51,7 @@ char	*ft_line(char *buffer)
 
 	i = 0;
 	if (!buffer[i])
-		return (0);
+		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	line = ft_calloc(i + 2, sizeof(char));
@@ -66,43 +66,43 @@ char	*ft_line(char *buffer)
 	return (line);
 }
 
-char	*ft_read_chunks(int fd, char *res)
+char	*read_file(int fd, char *res)
 {
-	char	*b_size_read;
+	char	*buffer;
 	int		byte_read;
 
 	if (!res)
 		res = ft_calloc(1, 1);
-	b_size_read = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	byte_read = 1;
 	while (byte_read > 0)
 	{
-		byte_read = read(fd, b_size_read, BUFFER_SIZE);
+		byte_read = read(fd, buffer, BUFFER_SIZE);
 		if (byte_read == -1)
 		{
-			free(b_size_read);
-			return (0);
+			free(buffer);
+			return (NULL);
 		}
-		b_size_read[byte_read] = '\0';
-		res = ft_join_clean(res, b_size_read);
-		if (ft_strchr(b_size_read, '\n'))
+		buffer[byte_read] = 0;
+		res = fr_free(res, buffer);
+		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
-	free(b_size_read);
+	free(buffer);
 	return (res);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
+	static char	*buffer[INT_MAX];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-		return (0);
-	buffer = ft_read_chunks(fd, buffer);
-	if (!buffer)
-		return (0);
-	line = ft_line(buffer);
-	buffer = ft_next(buffer);
+		return (NULL);
+	buffer[fd] = read_file(fd, buffer[fd]);
+	if (!buffer[fd])
+		return (NULL);
+	line = ft_line(buffer[fd]);
+	buffer[fd] = ft_next(buffer[fd]);
 	return (line);
 }

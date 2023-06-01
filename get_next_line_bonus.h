@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/24 14:03:28 by ksansom           #+#    #+#             */
-/*   Updated: 2023/06/01 12:53:07 by ksansom          ###   ########.fr       */
+/*   Created: 2023/06/01 10:16:09 by ksansom           #+#    #+#             */
+/*   Updated: 2023/06/01 11:21:22 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
+# include <limits.h>
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/uio.h>
@@ -19,9 +20,11 @@
 
 char	*get_next_line(int fd);
 char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strchr(const char *string, int searchedChar );
-void	*ft_memset(void *b, int c, size_t len);
-void	*ft_calloc(size_t nmemb, size_t size);
-size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *string, int searchedChar);
+char	*ft_strdup(const char *s);
+void	ft_bzero(void *s, size_t n);
+void	*ft_calloc(size_t elementCount, size_t elementSize);
+
+size_t	ft_strlen(const char *theString);
 
 #endif

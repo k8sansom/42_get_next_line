@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/24 14:03:10 by ksansom           #+#    #+#             */
-/*   Updated: 2023/06/01 13:18:15 by ksansom          ###   ########.fr       */
+/*   Created: 2023/06/01 10:16:37 by ksansom           #+#    #+#             */
+/*   Updated: 2023/06/01 10:34:12 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -40,47 +40,50 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (res);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *string, int searchedChar )
 {
-	while (*s != (unsigned char)c)
-	{
-		if (!*s)
-			return (0);
-		s++;
-	}	
-	return ((char *)s);
+	char	*str;
+
+	str = (char *)string;
+	while (*str != searchedChar && *str != 0)
+		str++;
+	if (*str == searchedChar)
+		return (str);
+	else
+		return (NULL);
 }
 
-void	*ft_memset(void *b, int c, size_t len)
+void	ft_bzero(void *s, size_t n)
 {
+	char	*str;
 	size_t	i;
 
+	str = (char *)s;
 	i = 0;
-	while (i < len)
+	while (i < n)
 	{
-		*(unsigned char *)(b + i) = c;
+		str[i] = '\0';
 		i++;
 	}
-	return (b);
 }
 
-void	*ft_calloc(size_t nmemb, size_t size)
+void	*ft_calloc(size_t elementCount, size_t elementSize)
 {
-	void	*ptr;
+	char	*res;
 
-	ptr = (void *)malloc(size * nmemb);
-	if (!ptr)
-		return (0);
-	ft_memset(ptr, 0, (size * nmemb));
-	return (ptr);
+	res = malloc(elementSize * elementCount);
+	if (!res)
+		return (NULL);
+	ft_bzero(res, elementSize * elementCount);
+	return (res);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(const char *theString)
 {
 	int	i;
 
 	i = 0;
-	while (s[i])
+	while (theString[i])
 		i++;
 	return (i);
 }
