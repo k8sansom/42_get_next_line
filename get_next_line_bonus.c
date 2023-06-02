@@ -6,7 +6,7 @@
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 10:49:03 by ksansom           #+#    #+#             */
-/*   Updated: 2023/06/02 11:13:55 by ksansom          ###   ########.fr       */
+/*   Updated: 2023/06/02 15:08:48 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*ft_next(char *str)
 	if (!str[i])
 	{
 		free(str);
-		return (0);
+		return (NULL);
 	}
 	leftover = ft_calloc((ft_strlen(str) - i + 1), 1);
 	i++;
@@ -51,7 +51,7 @@ char	*ft_line(char *str)
 
 	i = 0;
 	if (!str[i])
-		return (0);
+		return (NULL);
 	while (str[i] && str[i] != '\n')
 		i++;
 	line = ft_calloc(i + 2, 1);
@@ -68,27 +68,27 @@ char	*ft_line(char *str)
 
 char	*ft_read_chunks(int fd, char *str)
 {
-	char	*buffer_read;
+	char	*buffer;
 	int		bytes_read;
 
 	if (!str)
 		str = ft_calloc(1, 1);
-	buffer_read = ft_calloc(BUFFER_SIZE + 1, 1);
+	buffer = ft_calloc(BUFFER_SIZE + 1, 1);
 	bytes_read = 1;
 	while (bytes_read > 0)
 	{
-		bytes_read = read(fd, buffer_read, BUFFER_SIZE);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == -1)
 		{
-			free(buffer_read);
-			return (0);
+			free(buffer);
+			return (NULL);
 		}
-		buffer_read[bytes_read] = '\0';
-		str = ft_join_clean(str, buffer_read);
-		if (ft_strchr(buffer_read, '\n'))
+		buffer[bytes_read] = 0;
+		str = ft_join_clean(str, buffer);
+		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
-	free(buffer_read);
+	free(buffer);
 	return (str);
 }
 
@@ -97,12 +97,11 @@ char	*get_next_line(int fd)
 	static char	*string[MAX_FD];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 \
-		|| BUFFER_SIZE > INT_MAX -1)
-		return (0);
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (NULL);
 	string[fd] = ft_read_chunks(fd, string[fd]);
 	if (!string[fd])
-		return (0);
+		return (NULL);
 	line = ft_line(string[fd]);
 	string[fd] = ft_next(string[fd]);
 	return (line);

@@ -8,8 +8,7 @@ int main()
 	char *line;
 
 	// Open the file for reading
-	fd = open("tester.txt", O_RDONLY);
-	printf("%i\n", fd);
+	fd = open("read_error.txt", O_RDONLY);
 	if (fd == -1)
 	{
 		printf("Failed to open the file\n");
