@@ -9,6 +9,7 @@ int main()
 
 	// Open the file for reading
 	fd = open("tester.txt", O_RDONLY);
+	printf("%i\n", fd);
 	if (fd == -1)
 	{
 		printf("Failed to open the file\n");
@@ -25,5 +26,5 @@ int main()
 	// Close the file
 	close(fd);
 
-	return 0;
+	return (0);
 }
