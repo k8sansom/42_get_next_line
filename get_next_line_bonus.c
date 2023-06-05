@@ -6,103 +6,93 @@
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/02 10:49:03 by ksansom           #+#    #+#             */
-/*   Updated: 2023/06/02 15:08:48 by ksansom          ###   ########.fr       */
+/*   Updated: 2023/06/05 10:36:54 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*ft_join_clean(char *str, char *buffer_read)
+/*free_archive frees the memory allocated to archive, sets it to NULL and
+returns NULL*/
+static char	*free_archive(char **archive)
 {
-	char	*join;
-
-	join = ft_strjoin(str, buffer_read);
-	free(str);
-	return (join);
-}
-
-char	*ft_next(char *str)
-{
-	int		i;
-	int		j;
-	char	*leftover;
-
-	i = 0;
-	while (str[i] && str[i] != '\n')
-		i++;
-	if (!str[i])
+	if (*archive)
 	{
-		free(str);
-		return (NULL);
+		free(*archive);
+		*archive = NULL;
 	}
-	leftover = ft_calloc((ft_strlen(str) - i + 1), 1);
-	i++;
-	j = 0;
-	while (str[i])
-		leftover[j++] = str[i++];
-	free(str);
-	return (leftover);
+	return (NULL);
 }
 
-char	*ft_line(char *str)
+/*join_archive_and_buffer is joining archive and the buffer and properly
+freeing the previously allocated memory*/
+static void	join_archive_and_buffer(char **archive, char *buffer)
 {
+	char	*temp;
+
+	temp = ft_strjoin(*archive, buffer);
+	free_archive(archive);
+	*archive = temp;
+}
+
+/*extract_line looks the first occurence of '\n' in archive and returns all the
+characters before it, it then updates archive by deleting all the characters
+before '\n', and '\n' itself.
+If no '\n'' is found in archive, extrcat_line returns archive and frees it*/
+static char	*extract_line(char **archive)
+{
+	size_t	length;
 	char	*line;
-	int		i;
+	char	*temp;
 
-	i = 0;
-	if (!str[i])
+	if (ft_strchr(*archive, '\n'))
+		length = ft_strchr(*archive, '\n') - *archive + 1;
+	else
+		length = ft_strlen(*archive);
+	line = malloc((length + 1) * sizeof(char));
+	if (!line)
 		return (NULL);
-	while (str[i] && str[i] != '\n')
-		i++;
-	line = ft_calloc(i + 2, 1);
-	i = 0;
-	while (str[i] && str[i] != '\n')
+	ft_strlcpy(line, *archive, length + 1);
+	if (ft_strchr(*archive, '\n'))
 	{
-		line[i] = str[i];
-		i++;
+		temp = ft_strjoin(ft_strchr(*archive, '\n') + 1, "");
+		free_archive(archive);
+		*archive = temp;
 	}
-	if (str[i] && str[i] == '\n')
-		line[i++] = '\n';
+	else
+		free_archive(archive);
 	return (line);
 }
 
-char	*ft_read_chunks(int fd, char *str)
-{
-	char	*buffer;
-	int		bytes_read;
-
-	if (!str)
-		str = ft_calloc(1, 1);
-	buffer = ft_calloc(BUFFER_SIZE + 1, 1);
-	bytes_read = 1;
-	while (bytes_read > 0)
-	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (bytes_read == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		buffer[bytes_read] = 0;
-		str = ft_join_clean(str, buffer);
-		if (ft_strchr(buffer, '\n'))
-			break ;
-	}
-	free(buffer);
-	return (str);
-}
-
+/*get_next_line reads up to BUFFER_SIZE bytes of the file pointed by fd into 
+buffer. buffer is stored into the static variable archive at each iteration,
+and the line is extracted from archive by the extract_line function
+get_next_line returns the current line at each linebreak it encounters*/
 char	*get_next_line(int fd)
 {
-	static char	*string[MAX_FD];
-	char		*line;
+	char		*buffer;
+	static char	*archive[FD_MAX] = {NULL};
+	ssize_t		bytes_read;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX - 1)
 		return (NULL);
-	string[fd] = ft_read_chunks(fd, string[fd]);
-	if (!string[fd])
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
 		return (NULL);
-	line = ft_line(string[fd]);
-	string[fd] = ft_next(string[fd]);
-	return (line);
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	while (bytes_read > 0)
+	{
+		buffer[bytes_read] = '\0';
+		if (!archive[fd])
+			archive[fd] = ft_strjoin("", buffer);
+		else
+			join_archive_and_buffer(&archive[fd], buffer);
+		if (ft_strchr(archive[fd], '\n'))
+			break ;
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+	}
+	free(buffer);
+	if (bytes_read == -1 || !archive[fd] || !*archive[fd])
+		return (free_archive(&archive[fd]));
+	return (extract_line(&archive[fd]));
 }
