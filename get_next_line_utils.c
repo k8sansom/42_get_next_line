@@ -6,71 +6,68 @@
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 14:03:10 by ksansom           #+#    #+#             */
-/*   Updated: 2023/06/05 13:52:02 by ksansom          ###   ########.fr       */
+/*   Updated: 2023/06/06 13:45:29 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-/*ft_strlen returns the length of str*/
 size_t	ft_strlen(const char *str)
 {
-	size_t	length;
+	size_t	i;
 
-	length = 0;
-	while (*str++)
-		length++;
-	return (length);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }
 
-/*ft_strjoin allocates and returns a new string, which is the result of the
-concatenation of ’s1’ and ’s2’.*/
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*output;
-	char	*output_ptr;
+	char	*join;
+	size_t	i;
+	size_t	j;
 
-	output = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (output == NULL)
-		return (NULL);
-	output_ptr = output;
-	while (*s1)
-		*output_ptr++ = *s1++;
-	while (*s2)
-		*output_ptr++ = *s2++;
-	*output_ptr = '\0';
-	return (output);
+	j = 0;
+	i = 0;
+	join = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!join)
+		return (0);
+	while (s1[i] != '\0')
+		join[j++] = s1[i++];
+	i = 0;
+	while (s2[i] != '\0')
+		join[j++] = s2[i++];
+	join[j] = '\0';
+	return (join);
 }
 
-/*ft_strchr locates the character c in str and returns its position*/
-char	*ft_strchr(const char *str, int c)
+char	*ft_strchr(const char *s, int c)
 {
-	char	*ptr;
-
-	if (!str || !*str)
-		return (NULL);
-	ptr = (char *)str;
-	while (*ptr && (unsigned char)*ptr != (unsigned char)c)
-		ptr++;
-	if ((unsigned char)*ptr == (unsigned char)c)
-		return (ptr);
-	else
-		return (NULL);
+	while (*s != (unsigned char)c)
+	{
+		if (!*s)
+			return (0);
+		s++;
+	}	
+	return ((char *)s);
 }
 
-/*ft_strlcpy copies up to size - 1 characters from the NUL-terminated string
-src to dst, NUL-terminating the result.*/
 size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
-	size_t	length;
+	size_t	i;
 
-	length = 0;
-	while (src[length])
-		length++;
-	if (size == 0)
-		return (length);
-	while (--size && *src)
-		*(dest++) = *(src++);
-	*dest = '\0';
-	return (length);
+	i = 0;
+	if (size > 0)
+	{
+		while (src[i] && i < (size - 1))
+		{
+			dest[i] = src[i];
+			i++;
+		}
+		dest[i] = '\0';
+	}
+	while (src[i])
+		i++;
+	return (i);
 }

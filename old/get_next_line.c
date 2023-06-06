@@ -6,7 +6,7 @@
 /*   By: ksansom <ksansom@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 14:02:14 by ksansom           #+#    #+#             */
-/*   Updated: 2023/06/05 14:42:21 by ksansom          ###   ########.fr       */
+/*   Updated: 2023/06/06 11:08:25 by ksansom          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,7 @@ char	*get_next_line(int fd)
 	static char	*string;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 \
-		|| BUFFER_SIZE > INT_MAX - 1)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > INT_MAX - 1)
 		return (NULL);
 	string = ft_read_chunks(fd, string);
 	if (!string)
